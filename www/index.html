@@ -45,7 +45,7 @@
 
 
         <div class="row">
-            <div class=".col-xs-12">
+            <div class="col-xs-12">
                 <img class="center-block img-responsive" src="img/logo.png">
             </div>
         </div>
@@ -173,9 +173,11 @@
                         score = score + 10;
                         document.getElementById("score").innerHTML = score;
 
-                    /*FINE LIVELLO*/
-                    //if(score=50){activegame=false;
-                    //$(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');}
+                        /*FINE LIVELLO*/
+                        if (score == 100) {
+                            activegame = false;
+                            $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
+                        }
                     });
 
                     /*FUNZIONE FINE LIVELLO*/
@@ -195,8 +197,6 @@
                     /*FUNZIONE ESCI*/
                     $("#btnEsci").on("tap", function() {
                         activegame = false;
-                        //                       score=0;
-                        //                       document.getElementById("score").innerHTML = score;
                     });
 
                 });
@@ -235,10 +235,15 @@
         <!--<div data-theme="" data-role="header">
             <h3></h3>
         </div>-->
-
+        
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <img class="center-block img-responsive" src="img/finelivello.png">
+            </div>
+        </div>
         <div data-role="content">
-            <h1 class="fineLivello">LIVELLO ID_LIVELLO COMPLETATO</h1>
-            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Livello 2</a>
+            <h1 class="fineLivello">LIVELLO COMPLETATO</h1>
+<!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
             <a id="btnEsci" class="cursore" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
@@ -255,6 +260,7 @@
         app.initialize();
 
     </script>
+
 </body>
 
 </html>
