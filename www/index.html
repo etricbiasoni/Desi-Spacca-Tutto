@@ -27,7 +27,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link href="plugin/TimeTo/timeTo.css" type="text/css" rel="stylesheet" />
+
 
 </head>
 
@@ -50,7 +50,8 @@
             </div>
         </div>
         <div data-role="content">
-            <a id="btnStart" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Gioca</a>
+            <a id="btnStart" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Gioca</a>
+            <a id="btnExitAll" data-role="button" href="" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
@@ -92,6 +93,7 @@
                 <!--                    <a id="btnMenu" data-role="button" href="#menu" data-icon="gear" data-iconpos="left"></a>-->
                 <div id="targets"></div>
                 <h1 id="score"></h1>
+
             </div>
 
 
@@ -109,7 +111,8 @@
                         "img/oggetti/bicchiere_1.png",
                         "img/oggetti/bicchiere_2.png",
                         "img/oggetti/bicchiere_3.png",
-                        "img/oggetti/bicchiere_4.png"
+                        "img/oggetti/bicchiere_4.png",
+                        "img/oggetti/desi.png"
                     ];
 
                     var size = description.length;
@@ -119,28 +122,48 @@
                         $("#targets").append("<img class=\"target\" src=\"" + k + "\">");
                     });
 
+                    var elidx;
 
                     var showpiece = function() {
                         var width = $(window).width();
                         var height = $(window).height();
-                        var elidx = Math.round(Math.random() * 9);
-                        $(".target").css("left", ((Math.random() * width) - 100));
+                        elidx = Math.round(Math.random() * 10);
                         var $curtarget = $(($(".target"))[elidx]);
                         $curtarget.css("display", "block");
-                        $curtarget.animate({
-                                bottom: (Math.random() * height)
-                            }, (Math.random() * 1500) + 1000,
-                            function() {
-                                $curtarget.animate({
-                                        bottom: -100
-                                    }, (Math.random() * 1500) + 1000,
-                                    function() {
-                                        $curtarget.css("display", "none");
-                                        if (activegame) {
-                                            window.setTimeout(showpiece, (Math.random() * 1000) + 500);
-                                        }
-                                    });
-                            });
+                        $(".target").css("bottom", "-100px");
+                        if (elidx < 10) {
+                            $(".target").css("left", ((Math.random() * (width - 90) + 10)));
+                            $curtarget.animate({
+                                    bottom: (Math.random() * height)
+                                }, (Math.random() * 1200) + 700,
+                                function() {
+                                    $curtarget.animate({
+                                            bottom: -100
+                                        }, (Math.random() * 1200) + 700,
+                                        function() {
+                                            $curtarget.css("display", "none");
+                                            if (activegame) {
+                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                            }
+                                        });
+                                });
+                        } else {
+                            $(".target").css("left", ((Math.random() * (width - 160) + 10)));
+                            $curtarget.animate({
+                                    bottom: height
+                                }, 700,
+                                function() {
+                                    $curtarget.animate({
+                                            bottom: -100
+                                        }, 700,
+                                        function() {
+                                            $curtarget.css("display", "none");
+                                            if (activegame) {
+                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                            }
+                                        });
+                                });
+                        }
                     }
 
 
@@ -148,19 +171,35 @@
                         score = 0;
                         document.getElementById("score").innerHTML = score;
                         $(".target").css("position", "absolute");
-                        $(".target").css("bottom", "-100px");
-                        $(".target").css("left", "0px");
+                        //                        $(".target").css("left", "0px");
                         activegame = true;
                         window.setTimeout(showpiece, 1000);
                     });
 
 
+                    $("#btnExitAll").on("tap", function() {
+                        navigator.app.exitApp();
+                    });
+
+
                     /*AUDIO GIOCO*/
-                    var obj = document.createElement("audio");
-                    obj.src = "audio/Crash.mp3";
-                    obj.volume = 0.90;
-                    obj.autoPlay = false;
-                    obj.preLoad = false;
+                    var objVetro = document.createElement("audio");
+                    objVetro.src = "audio/Crash.mp3";
+                    objVetro.volume = 0.90;
+                    objVetro.autoPlay = false;
+                    objVetro.preLoad = false;
+
+                    var objDesi = document.createElement("audio");
+                    objDesi.src = "audio/Crashing.mp3";
+                    objDesi.volume = 0.90;
+                    objDesi.autoPlay = false;
+                    objDesi.preLoad = false;
+
+                    var objApplausi = document.createElement("audio");
+                    objApplausi.src = "audio/applausi.mp3";
+                    objApplausi.volume = 0.90;
+                    objApplausi.autoPlay = false;
+                    objApplausi.preLoad = false;
 
                     /*PUNTEGGIO*/
                     var score = 0;
@@ -168,16 +207,23 @@
 
                     /*FUNZIONE ESPLOSIONE BERSAGLIO*/
                     $(".target").on("tap", function() {
-                        obj.play();
                         $(this).css("display", "none");
-                        $(this).css("cursor", "url(img/cursor.cur),auto");
-                        score = score + 10;
+                        if (elidx < 10) {
+                            objVetro.play();
+                            score = score + 10;
+                        } else {
+                            objDesi.play();
+                            score = score + 20;
+                        }
+
                         document.getElementById("score").innerHTML = score;
 
                         /*FINE LIVELLO*/
-                        if (score == 100) {
+
+                        if (score >= 200) {
                             activegame = false;
                             $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
+                            objApplausi.play();
                         }
                     });
 
@@ -220,8 +266,8 @@
         </div>-->
 
         <div data-role="content">
-            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua Partita</a>
-            <a id="btnEsci" class="cursore" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+            <a id="btnContinua" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua Partita</a>
+            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
@@ -236,7 +282,7 @@
         <!--<div data-theme="" data-role="header">
             <h3></h3>
         </div>-->
-        
+
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
                 <img class="center-block img-responsive" src="img/finelivello.png">
@@ -244,8 +290,8 @@
         </div>
         <div data-role="content">
             <h1 class="fineLivello">LIVELLO COMPLETATO</h1>
-<!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
-            <a id="btnEsci" class="cursore" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+            <!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
+            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
