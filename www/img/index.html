@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!--        <meta name="msapplication-tap-highlight" content="no" />-->
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+
+    <title>Desi Spacca Tutto</title>
+
+    <!-- Include jQuery Mobile stylesheets -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+    <!-- Include the jQuery library -->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Include the jQuery Mobile library -->
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <!-- Include the Leafletjs library -->
+    <!--
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+-->
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+
+</head>
+
+<body>
+    <!--<div class="app">
+            <div id="deviceready">
+                <button id="localizeme">Localizza</button>
+            </div>
+        </div>-->
+    <div data-role="page" id="homePage" style="background-image: url(img/sfondo.jpg);">
+
+        <!--<div data-theme="" data-role="header">
+        <h3></h3>
+    </div>-->
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <img class="center-block img-responsive" src="img/logo.png">
+            </div>
+        </div>
+        <div data-role="content">
+            <a id="btnStart" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Gioca</a>
+            <a id="btnExitAll" data-role="button" href="" data-icon="" data-iconpos="left" style="">Esci</a>
+        </div>
+
+        <!--<div data-theme="a" data-role="footer" data-position="fixed">
+        <h3></h3>
+    </div>-->
+
+        <script>
+            activegame = false;
+
+            /*AUDIO PAGINA INIZIALE*/
+            $(document).on("pagecreate", function() {
+                var obj = document.createElement("audio");
+                obj.src = "audio/Glass.mp3";
+                obj.volume = 0.90;
+                obj.autoPlay = false;
+                obj.preLoad = true;
+
+                $("#btnStart").on("tap", function() {
+                    obj.play();
+                });
+            });
+
+        </script>
+
+
+
+    </div>
+
+    <div data-role="page" id="gioca" style="background-image: url(img/sfondo.jpg);">
+
+        <div data-theme="" data-role="header">
+            <a id="btnMenu" data-role="button" href="#menu" data-icon="gear"></a>
+        </div>
+
+        <div data-role="content">
+
+
+            <div id="game">
+                <!--                    <a id="btnMenu" data-role="button" href="#menu" data-icon="gear" data-iconpos="left"></a>-->
+                <div id="targets"></div>
+                <h1 id="score"></h1>
+
+            </div>
+
+
+            <script>
+                $(document).ready(function() {
+
+
+                    var description = [
+                        "img/oggetti/tazza_verde.png",
+                        "img/oggetti/tazza_beije.png",
+                        "img/oggetti/tazza_azzurra.png",
+                        "img/oggetti/piatto_bianco.png",
+                        "img/oggetti/piatto_giallo.png",
+                        "img/oggetti/piatto_nero.png",
+                        "img/oggetti/bicchiere_1.png",
+                        "img/oggetti/bicchiere_2.png",
+                        "img/oggetti/bicchiere_3.png",
+                        "img/oggetti/bicchiere_4.png",
+                        "img/oggetti/desi.png"
+                    ];
+
+                    var size = description.length;
+
+                    /*FUNZIONE CHE MOSTRA I BERSAGLI*/
+                    $.each(description, function(i, k) {
+                        $("#targets").append("<img class=\"target\" src=\"" + k + "\">");
+                    });
+
+                    var elidx;
+
+                    var showpiece = function() {
+                        var width = $(window).width();
+                        var height = $(window).height();
+                        elidx = Math.round(Math.random() * 10);
+                        var $curtarget = $(($(".target"))[elidx]);
+                        $curtarget.css("display", "block");
+                        $(".target").css("bottom", "-100px");
+                        if (elidx < 10) {
+                            $(".target").css("left", ((Math.random() * (width - 90) + 10)));
+                            $curtarget.animate({
+                                    bottom: (Math.random() * height)
+                                }, (Math.random() * 1200) + 700,
+                                function() {
+                                    $curtarget.animate({
+                                            bottom: -100
+                                        }, (Math.random() * 1200) + 700,
+                                        function() {
+                                            $curtarget.css("display", "none");
+                                            if (activegame) {
+                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                            }
+                                        });
+                                });
+                        } else {
+                            $(".target").css("left", ((Math.random() * (width - 160) + 10)));
+                            $curtarget.animate({
+                                    bottom: height
+                                }, 700,
+                                function() {
+                                    $curtarget.animate({
+                                            bottom: -100
+                                        }, 700,
+                                        function() {
+                                            $curtarget.css("display", "none");
+                                            if (activegame) {
+                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                            }
+                                        });
+                                });
+                        }
+                    }
+
+
+                    $("#btnStart").on("tap", function() {
+                        score = 0;
+                        document.getElementById("score").innerHTML = score;
+                        $(".target").css("position", "absolute");
+                        //                        $(".target").css("left", "0px");
+                        activegame = true;
+                        window.setTimeout(showpiece, 1000);
+                    });
+
+
+                    $("#btnExitAll").on("tap", function() {
+                        navigator.app.exitApp();
+                    });
+
+
+                    /*AUDIO GIOCO*/
+                    var objVetro = document.createElement("audio");
+                    objVetro.src = "audio/Crash.mp3";
+                    objVetro.volume = 0.90;
+                    objVetro.autoPlay = false;
+                    objVetro.preLoad = false;
+
+                    var objDesi = document.createElement("audio");
+                    objDesi.src = "audio/Crashing.mp3";
+                    objDesi.volume = 0.90;
+                    objDesi.autoPlay = false;
+                    objDesi.preLoad = false;
+
+                    var objApplausi = document.createElement("audio");
+                    objApplausi.src = "audio/applausi.mp3";
+                    objApplausi.volume = 0.90;
+                    objApplausi.autoPlay = false;
+                    objApplausi.preLoad = false;
+
+                    /*PUNTEGGIO*/
+                    var score = 0;
+                    document.getElementById("score").innerHTML = score;
+
+                    /*FUNZIONE ESPLOSIONE BERSAGLIO*/
+                    $(".target").on("tap", function() {
+                        $(this).css("display", "none");
+                        if (elidx < 10) {
+                            objVetro.play();
+                            score = score + 10;
+                        } else {
+                            objDesi.play();
+                            score = score + 20;
+                        }
+
+                        document.getElementById("score").innerHTML = score;
+
+                        /*FINE LIVELLO*/
+
+                        if (score >= 200) {
+                            activegame = false;
+                            $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
+                            objApplausi.play();
+                        }
+                    });
+
+                    /*FUNZIONE FINE LIVELLO*/
+
+
+                    /*FUNZIONE STOP*/
+                    $("#btnMenu").on("tap", function() {
+                        activegame = false;
+                    });
+
+                    /*FUNZIONE CONTINUA*/
+                    $("#btnContinua").on("tap", function() {
+                        activegame = true;
+                        window.setTimeout(showpiece, 1000);
+                    });
+
+                    /*FUNZIONE ESCI*/
+                    $("#btnEsci").on("tap", function() {
+                        activegame = false;
+                    });
+
+                });
+
+            </script>
+
+        </div>
+
+        <!--
+            <div data-theme="a" data-role="footer" data-position="fixed">
+            </div>
+-->
+    </div>
+
+
+    <div data-role="page" id="menu" style="background-image: url(img/sfondo.jpg);">
+
+        <!--<div data-theme="" data-role="header">
+            <h3></h3>
+        </div>-->
+
+        <div data-role="content">
+            <a id="btnContinua" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua Partita</a>
+            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+        </div>
+
+        <!--<div data-theme="a" data-role="footer" data-position="fixed">
+            <h3></h3>
+        </div>-->
+
+    </div>
+
+
+    <div data-role="page" id="fineLivello" style="background-image: url(img/sfondo.jpg);">
+
+        <!--<div data-theme="" data-role="header">
+            <h3></h3>
+        </div>-->
+
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <img class="center-block img-responsive" src="img/finelivello.png">
+            </div>
+        </div>
+        <div data-role="content">
+            <h1 class="fineLivello">LIVELLO COMPLETATO</h1>
+            <!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
+            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+        </div>
+
+        <!--<div data-theme="a" data-role="footer" data-position="fixed">
+            <h3></h3>
+        </div>-->
+
+    </div>
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+
+    </script>
+
+</body>
+
+</html>
