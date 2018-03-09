@@ -116,10 +116,7 @@ h1 {
     -webkit-animation:fade 3000ms infinite;
 }
 
-.cursore{
-    cursor:url(../img/cursor.cur),auto !important;
-}
-
+/*
 #canvas {
     width: 100% !important;
     display: block;
@@ -130,6 +127,7 @@ h1 {
     bottom: 0;
     height: 100%;
 }
+*/
 
 .target{display: none;}
 .target{padding: 20px;}
@@ -140,8 +138,6 @@ h1 {
     color: #f3d128; 
     font-size: 30px; 
     font-weight: bold;}
-
-
 
 #btnMenu{position: absolute; 
     left: 10px; top:10px;
