@@ -209,7 +209,7 @@
 
                         /*FINE LIVELLO*/
 
-                        if (score >= 300) {
+                        if (score >= 200) {
                             activegame = false;
                             $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
                             objApplausi.play();
@@ -230,6 +230,7 @@
                     }
 
                     $("#btnStart").on("tap", function() {
+                        var timeleft = 60;
                         document.getElementById("countdowntimer").textContent = timeleft;
                         downloadTimer = setInterval(timefunc, 1000);
                     });
