@@ -28,7 +28,6 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
 
-
 </head>
 
 <body>
@@ -92,10 +91,10 @@
             <div id="game">
                 <!--                    <a id="btnMenu" data-role="button" href="#menu" data-icon="gear" data-iconpos="left"></a>-->
                 <div id="targets"></div>
+                <span id="countdowntimer">60 </span>
                 <h1 id="score"></h1>
 
             </div>
-
 
             <script>
                 $(document).ready(function() {
@@ -137,31 +136,21 @@
                                     bottom: (Math.random() * height)
                                 }, (Math.random() * 1200) + 700,
                                 function() {
-                                    $curtarget.animate({
-                                            bottom: -100
-                                        }, (Math.random() * 1200) + 700,
-                                        function() {
-                                            $curtarget.css("display", "none");
-                                            if (activegame) {
-                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
-                                            }
-                                        });
+                                    $curtarget.css("display", "none");
+                                    if (activegame) {
+                                        window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                    }
                                 });
                         } else {
                             $(".target").css("left", ((Math.random() * (width - 160) + 10)));
                             $curtarget.animate({
                                     bottom: height
-                                }, 700,
+                                }, 500,
                                 function() {
-                                    $curtarget.animate({
-                                            bottom: -100
-                                        }, 700,
-                                        function() {
-                                            $curtarget.css("display", "none");
-                                            if (activegame) {
-                                                window.setTimeout(showpiece, (Math.random() * 500) + 0);
-                                            }
-                                        });
+                                    $curtarget.css("display", "none");
+                                    if (activegame) {
+                                        window.setTimeout(showpiece, (Math.random() * 500) + 0);
+                                    }
                                 });
                         }
                     }
@@ -220,29 +209,48 @@
 
                         /*FINE LIVELLO*/
 
-                        if (score >= 200) {
+                        if (score >= 300) {
                             activegame = false;
                             $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
                             objApplausi.play();
+                            clearInterval(downloadTimer);
                         }
                     });
 
-                    /*FUNZIONE FINE LIVELLO*/
+                    /*COUNTDOWN*/
+                    var downloadTimer;
+                    var timeleft = 60;
+                    var timefunc = function() {
+                        timeleft--;
+                        document.getElementById("countdowntimer").textContent = timeleft;
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                            $(':mobile-pagecontainer').pagecontainer('change', '#haiperso');
+                        }
+                    }
 
+                    $("#btnStart").on("tap", function() {
+                        document.getElementById("countdowntimer").textContent = timeleft;
+                        downloadTimer = setInterval(timefunc, 1000);
+                    });
 
                     /*FUNZIONE STOP*/
                     $("#btnMenu").on("tap", function() {
+                        clearInterval(downloadTimer);
                         activegame = false;
                     });
 
                     /*FUNZIONE CONTINUA*/
                     $("#btnContinua").on("tap", function() {
+                        downloadTimer = setInterval(timefunc, 1000);
                         activegame = true;
                         window.setTimeout(showpiece, 1000);
                     });
 
                     /*FUNZIONE ESCI*/
                     $("#btnEsci").on("tap", function() {
+                        timeleft = 60;
+                        document.getElementById("countdowntimer").textContent = timeleft;
                         activegame = false;
                     });
 
@@ -289,8 +297,31 @@
             </div>
         </div>
         <div data-role="content">
-            <h1 class="fineLivello">LIVELLO COMPLETATO</h1>
+            <h1 class="fineLivello">HAI VINTO</h1>
             <!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
+            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+        </div>
+
+        <!--<div data-theme="a" data-role="footer" data-position="fixed">
+            <h3></h3>
+        </div>-->
+
+    </div>
+    
+    <div data-role="page" id="haiperso" style="background-image: url(img/sfondo.jpg);">
+
+        <!--<div data-theme="" data-role="header">
+            <h3></h3>
+        </div>-->
+
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <img class="center-block img-responsive" src="img/finelivello.png">
+            </div>
+        </div>
+        <div data-role="content">
+            <h1 class="fineLivello">HAI PERSO</h1>
+<!--            <a id="btnStart" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Ricomincia</a>-->
             <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
@@ -303,6 +334,8 @@
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+
+
     <script type="text/javascript">
         app.initialize();
 
