@@ -157,7 +157,7 @@
 
 
                     $("#btnStart").on("tap", function() {
-                        score = 0;
+                        score = 150;
                         document.getElementById("score").innerHTML = score;
                         $(".target").css("position", "absolute");
                         //                        $(".target").css("left", "0px");
@@ -197,7 +197,7 @@
                     objRisata.preLoad = false;
 
                     /*PUNTEGGIO*/
-                    var score = 0;
+                    var score = 150;
                     document.getElementById("score").innerHTML = score;
 
                     /*FUNZIONE ESPLOSIONE BERSAGLIO*/
@@ -205,17 +205,17 @@
                         $(this).css("display", "none");
                         if (elidx < 10) {
                             objVetro.play();
-                            score = score + 10;
+                            score = score - 10;
                         } else {
                             objDesi.play();
-                            score = score + 20;
+                            score = score - 20;
                         }
 
                         document.getElementById("score").innerHTML = score;
 
                         /*FINE LIVELLO*/
 
-                        if (score >= 150) {
+                        if (score <= 0) {
                             activegame = false;
                             $(':mobile-pagecontainer').pagecontainer('change', '#fineLivello');
                             objApplausi.play();
