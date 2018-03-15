@@ -91,7 +91,7 @@
             <div id="game">
                 <!--                    <a id="btnMenu" data-role="button" href="#menu" data-icon="gear" data-iconpos="left"></a>-->
                 <div id="targets"></div>
-                <span id="countdowntimer">60 </span>
+                <span id="countdowntimer">30 </span>
                 <h1 id="score"></h1>
 
             </div>
@@ -134,7 +134,7 @@
                             $(".target").css("left", ((Math.random() * (width - 90) + 10)));
                             $curtarget.animate({
                                     bottom: (Math.random() * height)
-                                }, (Math.random() * 1200) + 700,
+                                }, (Math.random() * 1400) + 900,
                                 function() {
                                     $curtarget.css("display", "none");
                                     if (activegame) {
@@ -145,7 +145,7 @@
                             $(".target").css("left", ((Math.random() * (width - 160) + 10)));
                             $curtarget.animate({
                                     bottom: height
-                                }, 500,
+                                }, 700,
                                 function() {
                                     $curtarget.css("display", "none");
                                     if (activegame) {
@@ -189,6 +189,12 @@
                     objApplausi.volume = 0.90;
                     objApplausi.autoPlay = false;
                     objApplausi.preLoad = false;
+                    
+                    var objRisata = document.createElement("audio");
+                    objRisata.src = "audio/risata.mp3";
+                    objRisata.volume = 0.90;
+                    objRisata.autoPlay = false;
+                    objRisata.preLoad = false;
 
                     /*PUNTEGGIO*/
                     var score = 0;
@@ -219,18 +225,20 @@
 
                     /*COUNTDOWN*/
                     var downloadTimer;
-                    var timeleft = 60;
+                    var timeleft = 30;
                     var timefunc = function() {
                         timeleft--;
                         document.getElementById("countdowntimer").textContent = timeleft;
                         if (timeleft <= 0) {
                             clearInterval(downloadTimer);
                             $(':mobile-pagecontainer').pagecontainer('change', '#haiperso');
+                            objRisata.play();
                         }
                     }
 
                     $("#btnStart").on("tap", function() {
-                        var timeleft = 60;
+                        activegame = true;
+                        var timeleft = 30;
                         document.getElementById("countdowntimer").textContent = timeleft;
                         downloadTimer = setInterval(timefunc, 1000);
                     });
@@ -249,8 +257,8 @@
                     });
 
                     /*FUNZIONE ESCI*/
-                    $("#btnEsci").on("tap", function() {
-                        timeleft = 60;
+                    $(".btnEsci").on("tap", function() {
+                        timeleft = 30;
                         document.getElementById("countdowntimer").textContent = timeleft;
                         activegame = false;
                     });
@@ -276,7 +284,7 @@
 
         <div data-role="content">
             <a id="btnContinua" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua Partita</a>
-            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+            <a class="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
@@ -300,7 +308,7 @@
         <div data-role="content">
             <h1 class="fineLivello">HAI VINTO</h1>
             <!--            <a id="btnContinua" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Continua</a>-->
-            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+            <a class="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
@@ -323,7 +331,7 @@
         <div data-role="content">
             <h1 class="fineLivello">HAI PERSO</h1>
 <!--            <a id="btnStart" class="cursore" data-role="button" href="#gioca" data-icon="" data-iconpos="left" style="">Ricomincia</a>-->
-            <a id="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
+            <a class="btnEsci" data-role="button" href="#homePage" data-icon="" data-iconpos="left" style="">Esci</a>
         </div>
 
         <!--<div data-theme="a" data-role="footer" data-position="fixed">
